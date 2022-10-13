@@ -192,6 +192,8 @@ class InceptionResnetV1(nn.Module):
     Keyword Arguments:
         pretrained {str} -- Optional pretraining dataset. Either 'vggface2' or 'casia-webface'.
             (default: {None})
+        pretrained_model {str} -- Optional path to a pretrained model state_dict. If provided,
+            pretrained will be ignored. (default: {None})
         classify {bool} -- Whether the model should output classification probabilities or feature
             embeddings. (default: {False})
         num_classes {int} -- Number of output classes. If 'pretrained' is set and num_classes not
@@ -267,6 +269,9 @@ class InceptionResnetV1(nn.Module):
         if pretrained_model is not None:
             state_dict = torch.load(pretrained_model, map_location=device)
             self.load_state_dict(state_dict)
+            # we need to train
+            if self.num_classes is not None:
+                self.logits = nn.Linear(512, self.num_classes)
 
         if self.classify and self.num_classes is not None:
             self.logits = nn.Linear(512, self.num_classes)
