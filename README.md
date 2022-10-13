@@ -1,4 +1,7 @@
-# Face Recognition Using Pytorch 
+Note: This repository is a fork of timesler/facenet-pytorch
+Made to enable loading and training a custom model of Inception_resnet_v1
+
+# Face Recognition Using Pytorch
 [![Downloads](https://pepy.tech/badge/facenet-pytorch)](https://pepy.tech/project/facenet-pytorch)
 
 [![Code Coverage](https://img.shields.io/codecov/c/github/timesler/facenet-pytorch.svg)](https://codecov.io/gh/timesler/facenet-pytorch)
