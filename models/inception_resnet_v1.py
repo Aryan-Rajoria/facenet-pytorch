@@ -199,7 +199,7 @@ class InceptionResnetV1(nn.Module):
             initialized. (default: {None})
         dropout_prob {float} -- Dropout probability. (default: {0.6})
     """
-    def __init__(self, pretrained=None, classify=False, num_classes=None, dropout_prob=0.6, device=None):
+    def __init__(self, pretrained=None, pretrained_model=None, classify=False, num_classes=None, dropout_prob=0.6, device=None):
         super().__init__()
 
         # Set simple attributes
@@ -213,6 +213,9 @@ class InceptionResnetV1(nn.Module):
             tmp_classes = 10575
         elif pretrained is None and self.classify and self.num_classes is None:
             raise Exception('If "pretrained" is not specified and "classify" is True, "num_classes" must be specified')
+        
+        if pretrained_model is not None:
+            self.load_state_dict(torch.load(pretrained_model, map_location=device))
 
 
         # Define layers
@@ -260,6 +263,10 @@ class InceptionResnetV1(nn.Module):
         if pretrained is not None:
             self.logits = nn.Linear(512, tmp_classes)
             load_weights(self, pretrained)
+        
+        if pretrained_model is not None:
+            state_dict = torch.load(pretrained_model, map_location=device)
+            self.load_state_dict(state_dict)
 
         if self.classify and self.num_classes is not None:
             self.logits = nn.Linear(512, self.num_classes)
