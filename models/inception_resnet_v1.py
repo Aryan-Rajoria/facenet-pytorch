@@ -209,15 +209,15 @@ class InceptionResnetV1(nn.Module):
         self.classify = classify
         self.num_classes = num_classes
 
+        if self.num_classes is None:
+            self.num_classes =8631
+
         if pretrained == 'vggface2':
             tmp_classes = 8631
         elif pretrained == 'casia-webface':
             tmp_classes = 10575
         elif pretrained is None and self.classify and self.num_classes is None:
             raise Exception('If "pretrained" is not specified and "classify" is True, "num_classes" must be specified')
-        
-        if pretrained_model is not None:
-            self.load_state_dict(torch.load(pretrained_model, map_location=device))
 
 
         # Define layers
@@ -265,12 +265,12 @@ class InceptionResnetV1(nn.Module):
         if pretrained is not None:
             self.logits = nn.Linear(512, tmp_classes)
             load_weights(self, pretrained)
+
         
         if pretrained_model is not None:
             # We must add logits layer for pretrained_model which must be inputed
             self.logits = nn.Linear(512, self.num_classes)
-            state_dict = torch.load(pretrained_model, map_location=device)
-            self.load_state_dict(state_dict)
+            new_load_weight(self, pretrained_model)
 
             # If we want new
             if new_classes is not None:
@@ -316,6 +316,9 @@ class InceptionResnetV1(nn.Module):
             x = F.normalize(x, p=2, dim=1)
         return x
 
+def new_load_weight(mdl, path):
+    state_dict = torch.load(path)
+    mdl.load_state_dict(state_dict)
 
 def load_weights(mdl, name):
     """Download pretrained state_dict and load into model.
