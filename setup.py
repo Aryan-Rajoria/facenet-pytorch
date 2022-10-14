@@ -28,6 +28,7 @@ setuptools.setup(
         'facenet_train.models.utils',
         'facenet_train.data',
     ],
+    package_dir={'facenet_train':'.'},
     package_data={'': ['*net.pt']},
     classifiers=[
         "Programming Language :: Python :: 3",

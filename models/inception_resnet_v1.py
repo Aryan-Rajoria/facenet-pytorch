@@ -210,7 +210,7 @@ class InceptionResnetV1(nn.Module):
         self.num_classes = num_classes
 
         if self.num_classes is None:
-            self.num_classes =8631
+            self.num_classes = 8631
 
         if pretrained == 'vggface2':
             tmp_classes = 8631
