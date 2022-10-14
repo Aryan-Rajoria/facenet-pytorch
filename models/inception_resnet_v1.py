@@ -201,7 +201,7 @@ class InceptionResnetV1(nn.Module):
             initialized. (default: {None})
         dropout_prob {float} -- Dropout probability. (default: {0.6})
     """
-    def __init__(self, pretrained=None, pretrained_model=None, classify=False, num_classes=None, dropout_prob=0.6, device=None):
+    def __init__(self, pretrained=None, pretrained_model=None, classify=False, num_classes=None, new_classes=None, dropout_prob=0.6, device=None):
         super().__init__()
 
         # Set simple attributes
@@ -267,11 +267,14 @@ class InceptionResnetV1(nn.Module):
             load_weights(self, pretrained)
         
         if pretrained_model is not None:
+            # We must add logits layer for pretrained_model which must be inputed
+            self.logits = nn.Linear(512, self.num_classes)
             state_dict = torch.load(pretrained_model, map_location=device)
             self.load_state_dict(state_dict)
-            # we need to train
-            if self.num_classes is not None:
-                self.logits = nn.Linear(512, self.num_classes)
+
+            # If we want new
+            if new_classes is not None:
+                self.logits = nn.Linear(512, new_classes)
 
         if self.classify and self.num_classes is not None:
             self.logits = nn.Linear(512, self.num_classes)
